@@ -7,7 +7,7 @@ exports.getAllDetails = (req,res)=>{
         console.timeEnd("getAllDetails");
         if(err) return res.status(500).json({error:err.message});
         res.json(result);
-    })
+    });
 }
 
 exports.getLeaderboard = (req, res) => {
