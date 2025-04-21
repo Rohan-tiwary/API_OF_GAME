@@ -6,6 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 const playerRoutes = require("./routes/playerRoutes");
 app.use("/api", playerRoutes);
 

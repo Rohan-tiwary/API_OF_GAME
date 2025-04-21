@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const playerController = require("../controllers/playerController.js");
 
+router.get("/getAllDetails",playerController.getAllDetails);
 router.get("/leaderboard", playerController.getLeaderboard);
 router.get("/player/:id", playerController.getPlayerById);
 router.get("/top-players", playerController.getTopPlayers);

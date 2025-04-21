@@ -1,5 +1,15 @@
 const db = require("../config/db");
 
+exports.getAllDetails = (req,res)=>{
+    const sql ="SELECT * from PlayerStats";
+    console.time("getAllDetails");
+    db.query(sql,(err,result)=>{
+        console.timeEnd("getAllDetails");
+        if(err) return res.status(500).json({error:err.message});
+        res.json(result);
+    })
+}
+
 exports.getLeaderboard = (req, res) => {
     const sql = "SELECT playerName, playerRank, totalKills, winRate FROM PlayerStats ORDER BY playerRank ASC";
     console.time("getLeaderboard");
@@ -9,8 +19,6 @@ exports.getLeaderboard = (req, res) => {
         res.json(results);
     });
 };
-
-
 
 exports.getPlayerById = (req, res) => {
     const { id } = req.params;
@@ -23,7 +31,6 @@ exports.getPlayerById = (req, res) => {
     });
 };
 
-
 exports.getTopPlayers = (req, res) => {
     const sql = "SELECT playerName, playerRank FROM PlayerStats ORDER BY playerRank ASC LIMIT 10";
     console.time("getTopPlayers");
@@ -33,7 +40,6 @@ exports.getTopPlayers = (req, res) => {
         res.json(results);
     });
 };
-
 
 exports.getTopKillers = (req, res) => {
     const sql = "SELECT playerName, totalKills FROM PlayerStats ORDER BY totalKills DESC LIMIT 10";
@@ -45,7 +51,6 @@ exports.getTopKillers = (req, res) => {
     });
 };
 
-
 exports.getHighestHeadshots = (req, res) => {
     const sql = "SELECT playerName, headshots FROM PlayerStats ORDER BY headshots DESC LIMIT 10";
     console.time("getHighestHeadshots");
@@ -55,7 +60,6 @@ exports.getHighestHeadshots = (req, res) => {
         res.json(results);
     });
 };
-
 
 exports.getBestAccuracy = (req, res) => {
     const sql = "SELECT playerName, accuracy FROM PlayerStats ORDER BY accuracy DESC LIMIT 10";
@@ -67,7 +71,6 @@ exports.getBestAccuracy = (req, res) => {
     });
 };
 
-
 exports.getLongestSurvival = (req, res) => {
     const sql = "SELECT playerName, longestSurvival FROM PlayerStats ORDER BY longestSurvival DESC LIMIT 10";
     console.time("getLongestSurvival");
@@ -77,7 +80,6 @@ exports.getLongestSurvival = (req, res) => {
         res.json(results);
     });
 };
-
 
 exports.addPlayer = (req, res) => {
     const { playerName, totalKills, playerRank, winRate, headshots, accuracy, totalMatches, longestSurvival } = req.body;
