@@ -10,6 +10,7 @@ exports.getAllDetails = (req,res)=>{
     });
 }
 
+
 exports.getLeaderboard = (req, res) => {
     const sql = "SELECT playerName, playerRank, totalKills, winRate FROM PlayerStats ORDER BY playerRank ASC";
     console.time("getLeaderboard");
@@ -127,4 +128,76 @@ exports.deletePlayer = (req, res) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: "Player deleted successfully" });
     });
+};
+
+exports.getMatchDetails=(req,res)=>{
+  const playerName = req.params.playerName;
+
+  const query = `
+    SELECT 
+      playerName,
+      SUM(CASE WHEN isWin = TRUE THEN 1 ELSE 0 END) AS wins,
+      SUM(CASE WHEN isWin = FALSE THEN 1 ELSE 0 END) AS losses
+    FROM 
+      PlayerStats
+    WHERE 
+      playerName = ?
+    GROUP BY 
+      playerName;
+  `;
+
+  db.query(query, [playerName], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Player not found' });
+    }
+
+    res.json({
+      status:"sucess",
+      player: results[0].playerName,
+      winCount: results[0].wins,
+      lossCount: results[0].losses
+    });
+  });
+}
+
+exports.getMatchDetailsById = (req, res) => {
+  const matchId = req.params.id;
+
+  const query = `
+    SELECT 
+      id,
+      playerName,
+      isWin,
+      totalKills,
+      SurvivalTime
+    FROM 
+      PlayerStats
+    WHERE 
+      id = ?
+  `;
+
+  db.query(query, [matchId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Match not found' });
+    }
+
+    const match = results[0];
+
+    res.json({
+      status: "success",
+      matchId: match.id,
+      playerName: match.playerName,
+      winStatus: match.isWin,
+      kills: match.totalKills,
+      survivalTime: match.SurvivalTime
+    });
+  });
 };

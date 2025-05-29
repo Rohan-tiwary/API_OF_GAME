@@ -13,5 +13,7 @@ router.get("/longest-survival", playerController.getLongestSurvival);
 router.post("/add-player", playerController.addPlayer);
 router.put("/update-player/:id", playerController.updatePlayerStats);
 router.delete("/delete-player/:id", playerController.deletePlayer);
+router.get('/get-match-history/:playerName',playerController.getMatchDetails);
+router.get('/get-details/:id',playerController.getMatchDetailsById)
 
 module.exports = router;
